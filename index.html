@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Now Playing</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" href="//www.scdn.co/i/_global/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+  <body>
+
+    <div class='content'></div>
+    <div class='hint'>&nbsp;</div>
+
+    <canvas id='canv'></canvas>
+
+    <div class='media-container'>
+      <div class='media-inner'>
+
+        <div class='album-art'>
+          <img id='art' src="#">
+        </div>
+
+        <div class='song-info'>
+          <div class='name'>loading</div>
+          <div class='artist'></div>
+
+          <div class='player'>
+            <div class="progress">
+              <audio id="player" controls type="audio/ogg; codecs=vorbis"></audio>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='spotify'>
+      <p>Checkout <a href="https://t.me/shinojsbot" target="_blank">@shinobot</a> to queue music&nbsp;&nbsp;</p>
+    </div>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.2/moment.min.js" integrity="sha256-DYyWoZ81AkDpPAJcZqoKFkhTnt5EV74MlgFi8yEr0lc=" crossorigin="anonymous"></script>
+    <script src="js/timer.js"></script>
+    <!-- Christmas -->
+    <!-- <script src="js/snow.js"></script> -->
+
+    <script type="text/javascript" async>
+      const API_URL = 'https://music.tritonjs.com/api'
+
+      const getRandomInt = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const wait = ms => {
+        return new Promise(resolv => {
+          setTimeout(resolv, ms)
+        })
+      }
+
+      const getWallpaper = async noWait => {
+        var num = getRandomInt(1, 201)
+        const url = `bg/${num}.png`
+
+        const preload = new Image()
+        preload.src=url
+
+        if(!noWait) await wait(3000)
+
+        $('.content').css('background-image', `url(${url})`)
+      }
+
+      getWallpaper(true)
+      setInterval(getWallpaper, 600000)
+
+      const getSong = async () => {
+        const data = await $.get(API_URL+'/v1/player/status')
+        if(!data.success) {
+          console.log('err', data)
+          throw new Error('Failed to get song info')
+        }
+
+        return data.data
+      }
+
+      const setDisplay = song => {
+        $('.name').text(song.title)
+        $('.artist').text(song.artist)
+        $('#art').attr('src', song.albumArtURL)
+      }
+
+      let lastSong = {
+        title: 'init'
+      }
+      const update = async () => {
+        const song = await getSong()
+        if(song.title === lastSong.title) return
+
+        lastSong = song
+
+        // update info
+        setDisplay(song)
+      }
+
+
+      // song tracking
+      const init = async () => {
+        const audio = document.getElementById('player')
+        const stream = await $.get(API_URL+'/v1/player/url')
+        if(!stream.success) throw new Error('Failed to get stream url')
+
+        const streamURL = `${stream.data}?nocache=${Math.floor(Math.random() * 1000000)}`
+        console.log('stream is going to be at:', streamURL)
+
+        audio.src=streamURL
+        audio.preload = "none"
+        audio.play()
+        audio.addEventListener('loadedmetadata', () => {
+          console.log('audio is ready')
+          update()
+          setInterval(update, 5000)
+        })
+        audio.addEventListener('ended', () => {
+          console.log('stream died')
+        })
+      }
+
+      init()
+    </script>
+  </body>
+</html>

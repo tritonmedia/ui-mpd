@@ -1,0 +1,205 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+.content {
+  position: fixed;
+  left:  0;
+  right: 0;
+  top:   0;
+  bottom: 0;
+
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+  transition: opacity .8s ease-out;
+
+  transform: scale(1.03);
+  filter: blur(8px);
+}
+
+#canv {
+  z-index: 1;
+  position: fixed;
+  left:  0;
+  right: 0;
+  top:   0;
+  bottom: 0;
+  background: transparent;
+  filter: blur(2px);
+}
+
+/**
+ * Darkens the BG
+ */
+.hint {
+  position: fixed;
+  left:  0;
+  right: 0;
+  top:   0;
+  bottom: 0;
+
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+  -webkit-transform: translate3d(0,0,0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  transform: translate3d(0,0,0);
+  transform: translateZ(0);
+
+  background-color: black;
+  opacity: 0.4;
+
+  z-index: 3;
+}
+
+.media-container {
+  z-index: 10;
+
+  margin-left: 100px;
+
+  position: fixed;
+  display: flex;
+  flex-direction: column;  /* make main axis vertical */
+  justify-content: center; /* center items vertically, in this case */
+  align-items: center;     /* center items horizontally, in this case */
+  height: 100%;
+  min-height: 100%;
+}
+
+.media-inner {
+  width: 100%;
+  margin: auto;
+  display: flex;
+}
+
+.album-art img {
+  height: 320px;
+  width: auto;
+
+  -webkit-box-shadow: 0px 0px 21px 1px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 21px 1px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 21px 1px rgba(0,0,0,0.75);
+}
+
+.song-info {
+  color: #fff;
+  margin-left: 50px;
+}
+
+.song-info .name {
+  font-size: 2.5em;
+}
+
+.song-info .artist {
+  font-size: 1.2em;
+  color: #b2b2b2;
+}
+
+.player {
+  width: 400px;
+  margin-top: 180px;
+  
+}
+
+.player .progress {
+  height: 30px;
+  background-color: grey;
+
+  -webkit-box-shadow: 0px 0px 3px 0.5px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 3px 0.5px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 3px 0.5px rgba(0,0,0,0.75);
+}
+
+.player .progress audio {
+  width:100%
+}
+
+.player .progress .progress-bar {
+  background-color: white !important;
+}
+
+.player .remaining-wrapper {
+  display: flex;
+  float: right;
+
+  font-size: 1.3em;
+  margin-top: 10px;
+}
+
+
+.spotify {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.spotify p {
+  text-shadow: #b2b2b2;
+  color: #fff;
+}
+
+.spotify p a {
+  color: cyan;
+}
+
+@media screen and (max-width: 480px) {
+  .media-container {
+    margin-left: 10px;
+  }
+  .album-art img {
+    height: 150px;
+  }
+
+  .player {
+    display: inline-block;
+    width: 140px;
+  }
+
+  .song-info .name {
+    font-size: 1.5em;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 880px) {
+  .media-container {
+    margin-left: 10px;
+  }
+  .album-art img {
+    height: 170px;
+  }
+
+  .player {
+    width: 200px;
+  }
+
+  .song-info .name {
+    font-size: 1.2em;
+  }
+}
+
+@media (min-width: 880px) and (max-width: 1000px) {
+  .album-art img {
+    height: 200px;
+  }
+
+  .media-container {
+    margin-left: 20px;
+  }
+
+  .player {
+    display: block;
+    margin-top: 80px;
+    width: 200px;
+  }
+}
